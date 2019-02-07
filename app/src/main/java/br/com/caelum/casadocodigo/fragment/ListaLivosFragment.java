@@ -22,6 +22,7 @@ import butterknife.ButterKnife;
 
 public class ListaLivosFragment extends Fragment {
 
+    private List<Livro> livros = new ArrayList<>();
 
     @BindView(R.id.lista_livors)
     RecyclerView recyclerView;
@@ -30,20 +31,16 @@ public class ListaLivosFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState){
         View view = inflater.inflate(R.layout.fragmaent_lista_livros,container,false);
 
-        List<Livro> livros = new ArrayList<>();
-        for (int i=0;i<6;i++)
-        {
-            Autor autor = new Autor();
-            autor.setNome("Autor"+1);
-            Livro livro = new Livro("Livro"+1, "Descricao " +1, Arrays.asList(autor));
-            livros.add(livro);
-        }
-
-        RecyclerView recyclerView = (RecyclerView)view.findViewById(R.id.lista_livors);
+        ButterKnife.bind(this,view);
         recyclerView.setAdapter(new LivroAdapter(livros));
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        ButterKnife.bind(this, view);
         return view;
+    }
+
+    public void populaListaCom(List<Livro> livros){
+        this.livros.clear();
+        this.livros.addAll(livros);
+        recyclerView.getAdapter().notifyDataSetChanged();
     }
 }

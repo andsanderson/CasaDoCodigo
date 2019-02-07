@@ -10,7 +10,10 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
+
 import br.com.caelum.casadocodigo.R;
+import br.com.caelum.casadocodigo.modelo.Autor;
 import br.com.caelum.casadocodigo.modelo.Livro;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -56,10 +59,20 @@ public class DetalheLivroFragment extends Fragment {
     private void populaCamposCom(Livro livro){
 
          nome.setText(livro.getNome());
-
          descricao.setText(livro.getDescricao());
-
          isbn.setText(livro.getISBN());
+         paginas.setText( String.valueOf(livro.getNumPaginas()));
+         dataPublicacao.setText(livro.getDataPublicacao());
+         
+         String autoresstr = "";
+
+        for (Autor autor:livro.getAutores()) {
+            autoresstr +=  "; " + autor.getNome();
+        }
+        autores.setText(autoresstr);
+
+        Picasso.with(getContext()).load(livro.getUrlFoto()).placeholder(R.drawable.livro).into(foto);
+
 
     }
 }

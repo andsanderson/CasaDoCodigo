@@ -9,6 +9,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
+
 import java.util.List;
 
 import br.com.caelum.casadocodigo.R;
@@ -50,6 +52,11 @@ public class LivroAdapter extends RecyclerView.Adapter {
         ViewHolder viewHolder = (ViewHolder) holder;
         Livro livro = livros.get(position);
         viewHolder.nome.setText(livro.getNome());
+
+        Picasso.with(viewHolder.foto.getContext())
+                .load(livro.getUrlFoto())
+                .placeholder(R.drawable.livro)
+                .into(viewHolder.foto);
     }
 
     public LivroAdapter (List<Livro> livros)
@@ -66,9 +73,6 @@ public class LivroAdapter extends RecyclerView.Adapter {
 
         public ViewHolder(View view){
             super(view);
-//            nome = (TextView) view.findViewById(R.id.item_livro_nome);
-//            foto=(ImageView) view.findViewById(R.id.item_livro_foto);
-
             ButterKnife.bind(this,itemView);
         }
 
@@ -76,7 +80,7 @@ public class LivroAdapter extends RecyclerView.Adapter {
         public void clickItem(){
             Livro livro = livros.get(getAdapterPosition());
             LivrosDelegate delegate = (LivrosDelegate) itemView.getContext();
-            delegate.lidaComLivoSelecunado(livro);
+            delegate.lidaComLivoSelecionado(livro);
         }
 
     }
