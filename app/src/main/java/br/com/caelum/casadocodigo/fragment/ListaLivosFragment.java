@@ -15,8 +15,10 @@ import java.util.List;
 
 import br.com.caelum.casadocodigo.R;
 import br.com.caelum.casadocodigo.adapter.LivroAdapter;
+import br.com.caelum.casadocodigo.listener.EndlessListListener;
 import br.com.caelum.casadocodigo.modelo.Autor;
 import br.com.caelum.casadocodigo.modelo.Livro;
+import br.com.caelum.casadocodigo.server.WebClient;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -35,12 +37,24 @@ public class ListaLivosFragment extends Fragment {
         recyclerView.setAdapter(new LivroAdapter(livros));
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
+        recyclerView.addOnScrollListener(new EndlessListListener() {
+            @Override
+            public void carregaMaisItens() {
+                new WebClient().getLivros(livros.size(),10);
+            }
+        });
+
         return view;
     }
 
-    public void populaListaCom(List<Livro> livros){
-        this.livros.clear();
-        this.livros.addAll(livros);
+    public void populaListaCom(List<Livro> livroslista){
+        this.livros.addAll(livroslista);
         recyclerView.getAdapter().notifyDataSetChanged();
+        recyclerView.addOnScrollListener(new EndlessListListener(){
+            @Override
+            public void carregaMaisItens() {
+                new WebClient().getLivros(livros.size(),10);
+            }
+        });
     }
 }
