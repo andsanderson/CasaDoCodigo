@@ -1,16 +1,18 @@
 package br.com.caelum.casadocodigo.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.Toast;
 
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
-import java.util.List;
 
 import br.com.caelum.casadocodigo.R;
 import br.com.caelum.casadocodigo.delegate.LivrosDelegate;
@@ -19,7 +21,7 @@ import br.com.caelum.casadocodigo.fragment.DetalheLivroFragment;
 import br.com.caelum.casadocodigo.fragment.ListaLivosFragment;
 import br.com.caelum.casadocodigo.modelo.Livro;
 import br.com.caelum.casadocodigo.server.WebClient;
-import butterknife.OnClick;
+
 
 public class MainActivity extends AppCompatActivity implements LivrosDelegate {
 
@@ -78,4 +80,19 @@ public class MainActivity extends AppCompatActivity implements LivrosDelegate {
         EventBus.getDefault().unregister(this);
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main_menu,menu);
+        return true;
+
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId()==R.id.vai_para_carrinho){
+            Intent vaiParaCarrinho = new Intent(this,CarrinhoActivity.class);
+            startActivity(vaiParaCarrinho);
+        }
+        return true;
+    }
 }
