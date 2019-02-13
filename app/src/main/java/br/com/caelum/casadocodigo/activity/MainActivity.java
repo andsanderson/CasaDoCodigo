@@ -2,6 +2,7 @@ package br.com.caelum.casadocodigo.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -9,6 +10,11 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -27,18 +33,34 @@ public class MainActivity extends AppCompatActivity implements LivrosDelegate {
 
     private ListaLivosFragment listaLivrosFragment;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+
         listaLivrosFragment = new ListaLivosFragment();
         transaction.replace(R.id.frame_principal,listaLivrosFragment);
         transaction.commit();
         new WebClient().getLivros(0,10);
         EventBus.getDefault().register(this);
         Log.i("Man", "onCreate: ");
+
+        final FirebaseRemoteConfig remoteConfig = FirebaseRemoteConfig.getInstance();
+        remoteConfig.setDefaults(R.xml.remote_config_defaults);
+        remoteConfig.fetch(15).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if(task.isSuccessful()) {
+                    remoteConfig.activateFetched();
+
+
+                }
+            }
+        });
+
 
     }
 
@@ -92,6 +114,12 @@ public class MainActivity extends AppCompatActivity implements LivrosDelegate {
         if (item.getItemId()==R.id.vai_para_carrinho){
             Intent vaiParaCarrinho = new Intent(this,CarrinhoActivity.class);
             startActivity(vaiParaCarrinho);
+        }else if(item.getItemId()==R.id.logOut){
+            FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+            firebaseAuth.signOut();
+            Intent vaiParaMain = new Intent(this,LoginActivity.class);
+            startActivity(vaiParaMain);
+            finish();
         }
         return true;
     }

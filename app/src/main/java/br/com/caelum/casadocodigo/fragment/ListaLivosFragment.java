@@ -9,6 +9,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -26,6 +28,7 @@ public class ListaLivosFragment extends Fragment {
 
     private List<Livro> livros = new ArrayList<>();
 
+
     @BindView(R.id.lista_livors)
     RecyclerView recyclerView;
 
@@ -34,7 +37,10 @@ public class ListaLivosFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragmaent_lista_livros,container,false);
 
         ButterKnife.bind(this,view);
-        recyclerView.setAdapter(new LivroAdapter(livros));
+        FirebaseRemoteConfig firebaseRemoteConfig = FirebaseRemoteConfig.getInstance();
+        boolean listType = firebaseRemoteConfig.getBoolean("list_type_single_item");
+
+        recyclerView.setAdapter(new LivroAdapter(livros, listType));
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
         recyclerView.addOnScrollListener(new EndlessListListener() {
